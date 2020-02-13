@@ -35,7 +35,7 @@ function enterState(newState) {
   }
 }
 
-async function street(){
+async function streetSide(){
   const streetMessage = 'We are where we started standing on the street.'
   let input = await ask(streetMessage)
   if(input=== 'return to foyer'){
@@ -51,24 +51,24 @@ async function foyer(){
   //if chain of possible actions within room
   const foyerMessage = 'Welcome to the foyer. A small room with a staircase which you are standing at the bottom of. There is a newstand '
   console.log(foyerMessage)
-  let input = await ask('What would you like to do?')
-  if(input === 'take stairs'){
-    stairwayUp()
-  } if (input === 'exit to street'){
-    street()
+  let inputFoyer = await ask('What would you like to do?')
+  if(inputFoyer === 'take stairs'){
+    await stairwayUp()
+  } if (inputFoyer === 'exit to street'){
+    streetSide()
   }
 }
 
 
 async function stairwayUp() {
   const stairwayMessage = 'You\'ve gone up the stiars and reached a door with a sign '
-  console.log(stairwayMessage)
-  let input = await ask(stairwayMessage)
-  if (input === 'read sign'){
+ 
+  let inputStairway = await ask(stairwayMessage)
+  if (inputStairway === 'read sign'){
     console.log(stairway.sign)
   }
-  if(input === 'enter code 12345'){
-    classroom()
+  if(inputStairway === 'enter code 12345'){
+    await classroom()
   }
 }
 
@@ -77,13 +77,13 @@ async function stairwayUp() {
 
 async function classroom(){
   const classroomMessage = 'You\'ve entered the classroom. Bob is teaching because you are late'
- let input = await ask(classroomMessage)
+ let inputClass = await ask(classroomMessage)
   // if statement allowing actions and results ---if(input === 'action'){result}
-  if(input === 'sit and listen'){
+  if(inputClass === 'sit and listen'){
 
   }
-if(input === 'go back down stairs'){
-foyer()
+if(inputClass === 'go back down stairs'){
+await foyer()
 }
 }
 
@@ -102,7 +102,7 @@ On the door is a handwritten sign.`;
 if (input === 'read sign'){
   console.log(street.sign)
 } if (input === "proceed to foyer"){
-  foyer()
+  await foyer()
 }
   process.exit();
 }
