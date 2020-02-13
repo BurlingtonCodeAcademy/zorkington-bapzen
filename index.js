@@ -139,6 +139,12 @@ async function start() {
 
   streetInput = await (ask('What next? '));
 
+  if (streetInput === 'open door') {
+    console.log('The door is locked.\n There is a keypad on the door handle.\n');
+  }
+
+  streetInput = await (ask('What next? '));
+
     if (streetInput === "proceed to foyer") {
       foyerEntry();
     
