@@ -23,13 +23,18 @@ let pathStates = {
 
 let currentState = "green";
 
+let player = {
+  
+}
+
 let street = {
 
   name: '182 Main St.',
   description: 'You are standing on Main Street between Church and South Winooski. There is a door here. A keypad sits on the handle. On the door is a handwritten sign.',
   lock: true,
   sign: 'The sign says "Welcome to Burlington Code Academy! Come on up to the third floor. If the door is locked, use the code "12345".',
-  takeSign: 'That would be selfish. How will other students find their way?'
+  takeSign: 'That would be selfish. How will other students find their way?',
+  inventory: ['sign']
 }
 
 let foyer = {
