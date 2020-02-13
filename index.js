@@ -20,42 +20,59 @@ let pathStates = {
 
 };
 
+const roomLookUp = {
+
+}
+
 
 let currentState = "green";
 
-let player = {
-  
+const player = {
+  name: null,
+  currentRoom: null,
+  inventory: ["pocket watch", 'map'],
+  status: [],
 }
+
+
+
 
 let street = {
 
-  name: '182 Main St.',
-  description: 'You are standing on Main Street between Church and South Winooski. There is a door here. A keypad sits on the handle. On the door is a handwritten sign.',
-  lock: true,
-  sign: 'The sign says "Welcome to Burlington Code Academy! Come on up to the third floor. If the door is locked, use the code "12345".',
-  takeSign: 'That would be selfish. How will other students find their way?',
-  inventory: ['sign']
+    name: '182 Main St.',
+    description: 'You are standing on Main Street between Church and South Winooski. There is a door here. A keypad sits on the handle. On the door is a handwritten sign.',
+    lock: true,
+    sign: 'The sign says "Welcome to Burlington Code Academy! Come on up to the third floor. If the door is locked, use the code "12345".',
+    takeSign: 'That would be selfish. How will other students find their way?',
+    inventory: ['sign']
 }
 
 let foyer = {
 
   name: 'foyer',
   description: '',
+  inventory: ['newspaper', 'shoes', 'sign']
+
 }
 
 let classroom = {
   name: 'Classroom',
-  description: 'BCA Class, "Abandon all hope, ye who enter here."'
+  description: 'BCA Class, "Abandon all hope, ye who enter here."',
+  inventory: ['chairs', 'knowledge']
 }
 
 let pizzaplace = {
   name: 'Mr. Mike\'s',
-  description: 'Pizza place next door'
+  description: 'Pizza place next door',
+  inventory: ['pizza']
 }
 
 let stairway = {
   sign: "Welcome to the classroom. To enter please enter code 12345"
+
 }
+
+
 
 function enterState(newState) {
   let validTransitions = states[currentState].canChangeTo;
@@ -77,17 +94,20 @@ async function streetSide() {
   }
 }
 
-async function foyerEntry() {
+
+
+async function foyerEntry(){
   //change to state 
   //if chain of possible actions within room
   const foyerMessage = 'Welcome to the foyer. A small room with a staircase which you are standing at the bottom of. There is a newstand '
-  console.log(foyerMessage)
-  let input = await ask('What would you like to do?')
-  if (input === 'take stairs') {
+
+  let input = await ask(foyerMessage)
+  if(input === 'take stairs'){
     stairwayUp()
-  } if (input === 'exit to street') {
-    street()
+  } if (input === 'exit to street'){
+    streetSide()
   }
+  
 }
 
 
@@ -113,14 +133,17 @@ async function classRoom() {
   if (input === 'sit and listen') {
 
   }
-  if (input === 'go back down stairs') {
-    foyer()
-  }
+if(input === 'go back down stairs'){
+foyerEntry()
+}
 }
 
 async function pizzaShop() {
   const pizzaMessage = 'you have entered the pizza shop'
   let input = await ask(pizzaMessage)
+  if (input === ''){
+    console.log('')
+  }
 }
 
 // async function game() {
@@ -148,9 +171,20 @@ async function start() {
       foyerEntry();
     
   };
+  if (streetInput === 'take sign'){
+    player.inventory.push('sign')
+
+    console.log(player.inventory)
+
+    street.inventory.pop()
+
+    console.log(street.inventory)
+  }
   
   
   }
+
+
   process.exit();
 }
 
