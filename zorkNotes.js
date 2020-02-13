@@ -8,7 +8,7 @@ function ask(questionText) {
 
 let player = {
 
-    inventory: ['paper', 'milk'],
+    inventory: ['paper', 'milk', 'key'],
     cash: 5,
     status: 'hangry'
 
