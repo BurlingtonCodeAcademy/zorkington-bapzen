@@ -31,7 +31,7 @@ function enterState(newState) {
   }
 }
 
-start();
+
 
 async function foyer(){
   //change to state 
@@ -41,11 +41,15 @@ async function foyer(){
   let input = await ask('What would you like to do?')
 }
 
+
 async function stairwayUp() {
   const stairwayMessage = 'You\'ve gone up the stiars and reached a door with a sign '
-  console.log
-  //if statements for possible actions
+  console.log(stairwayMessage)
+  let input = await ask(stairwayMessage)
 }
+
+  //if statements for possible actions
+
 
 async function classroom(){
   const classroomMessage = 'You\'ve entered the classroom. Bob is teaching because you are late'
@@ -61,11 +65,13 @@ You are standing on Main Street between Church and South Winooski.
 There is a door here. A keypad sits on the handle.
 On the door is a handwritten sign.`;
   let input = await ask(welcomeMessage);
-let input = await ask("What would you like to do?")
 if (input === 'read sign'){
   console.log(street.sign)
 } if (input === "proceed to foyer"){
-  enterFoyer()
+  foyer()
 }
   process.exit();
 }
+
+
+start();
