@@ -5,6 +5,12 @@ function ask(questionText) {
     return new Promise((resolve, reject) => { readlineInterface.question(questionText, resolve); })
 }
 
+let pathStates = {
+    'street': {canMoveTo: ['foyer', 'muddy']},
+    'foyer': {canMoveTo: ['stairs', 'street']},
+    'muddy': {canMoveTo: ['street', 'pizza']},
+    'pizza': {canMoveTo: ['muddy']}
+}
 
 let player = {
 
@@ -31,24 +37,25 @@ let street = {
         // return text;
         console.log(text);
     },
+}
 
-    // lock: function(room) {
-    //     let lockStatus = true;
-    //     combo = await ask('Type in the combination: ');
-    //     if (combo === 12345) {
-    //         lockStatus = false;
-    //         console.log('Unlocked.');
-    //     } else {
-    //         lockstatus = true;
-    //         console.log('Nope.');
-    //     };
-    }
-
+//     lock: function(room) {
+//         let lockStatus = true;
+//         combo = 
+//         if (combo === 12345) {
+//             lockStatus = false;
+//             console.log('Unlocked.');
+//         } else {
+//             lockstatus = true;
+//             console.log('Nope.');
+//         }
+//     }
+// }
 
 
 let foyer = {
 
-    name: 'Foyer',
+    name: 'foyer',
     description: '',
     door: function(room) {
         text = this.name + '\n' + this.description;
@@ -81,24 +88,36 @@ let pizzaplace = {
 }
 
 function enter (room) {
-
+    if (pathStates[currentState].canMoveTo.includes(room)) {
+        console.log('Change from ' + currentState);
+        currentState = room;
+        console.log('Current state is ' + currentState);
+    } else {
+        console.log('invalid state transition attempted')
+        // note state is not changed
+    }
     text = this.name + '\n' + this.description;
     // return text;
     console.log(text);
+
 };
+
 
 
 zork();
 
 async function zork() {
 
-   
+let room = 'street';
+currentState = room;
 
-street.door();
+enter(room);
+
+//street.door();
 //street.lock();
 let nextRoom = await ask('Move to...  ');
-//nextRoom.door();
 
+//await ask('Type in the combination: ');
 foyer.door();
 pizzaplace.door();
 classroom.door();

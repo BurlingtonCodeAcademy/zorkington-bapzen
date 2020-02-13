@@ -9,17 +9,43 @@ function ask(questionText) {
 
 // remember the StateMachine lecture
 // https://bootcamp.burlingtoncodeacademy.com/lessons/cs/state-machines
-let states = {
-  'roomOne': { canChangeTo: [ 'roomTwo' ] },
-  'roomTwo': { canChangeTo: [ 'roomThree' ] },
-  'roomThree': { canChangeTo: [ 'roomOne' ] }
+
+// State machine for room transitions
+let pathStates = {
+
+  'street': {canMoveTo: ['foyer', 'muddy']},
+  'foyer': {canMoveTo: ['stairs', 'street']},
+  'muddy': {canMoveTo: ['street', 'pizza']},
+  'pizza': {canMoveTo: ['muddy']}
+
 };
+
 
 let currentState = "green";
 
 let street = {
-  sign: 'lorem ipsum asdfa'
 
+    name: '182 Main St.',
+    description: 'You are standing on Main Street between Church and South Winooski. There is a door here. A keypad sits on the handle. On the door is a handwritten sign.',
+    lock: true,
+    sign: 'The sign says "Welcome to Burlington Code Academy! Come on up to the third floor. If the door is locked, use the code "12345".',
+    takeSign: 'That would be selfish. How will other students find their way?'
+}
+
+let foyer = {
+
+  name: 'foyer',
+  description: '',
+}
+
+let classroom = {
+  name: 'Classroom',
+  description: 'BCA Class, "Abandon all hope, ye who enter here."'
+}
+
+let pizzaplace = {
+  name: 'Mr. Mike\'s',
+  description: 'Pizza place next door'
 }
 
 let stairway = {
