@@ -17,6 +17,15 @@ let states = {
 
 let currentState = "green";
 
+let street = {
+  sign: 'lorem ipsum asdfa'
+
+}
+
+let stairway = {
+  sign: "Welcome to the classroom. To enter please enter code 12345"
+}
+
 function enterState(newState) {
   let validTransitions = states[currentState].canChangeTo;
   if (validTransitions.includes(newState)) {
@@ -26,14 +35,77 @@ function enterState(newState) {
   }
 }
 
-start();
+async function street(){
+  const streetMessage = 'We are where we started standing on the street.'
+  let input = await ask(streetMessage)
+  if(input=== 'return to foyer'){
+    foyer()
+  }
+  if(input === 'go to Mr. Mikes'){
+    pizzaShop()
+  }
+}
+
+async function foyer(){
+  //change to state 
+  //if chain of possible actions within room
+  const foyerMessage = 'Welcome to the foyer. A small room with a staircase which you are standing at the bottom of. There is a newstand '
+  console.log(foyerMessage)
+  let input = await ask('What would you like to do?')
+  if(input === 'take stairs'){
+    stairwayUp()
+  } if (input === 'exit to street'){
+    street()
+  }
+}
+
+
+async function stairwayUp() {
+  const stairwayMessage = 'You\'ve gone up the stiars and reached a door with a sign '
+  console.log(stairwayMessage)
+  let input = await ask(stairwayMessage)
+  if (input === 'read sign'){
+    console.log(stairway.sign)
+  }
+  if(input === 'enter code 12345'){
+    classroom()
+  }
+}
+
+  //if statements for possible actions
+
+
+async function classroom(){
+  const classroomMessage = 'You\'ve entered the classroom. Bob is teaching because you are late'
+ let input = await ask(classroomMessage)
+  // if statement allowing actions and results ---if(input === 'action'){result}
+  if(input === 'sit and listen'){
+
+  }
+if(input === 'go back down stairs'){
+foyer()
+}
+}
+
+async function pizzaShop(){
+  const pizzaMessage = 'you have entered the pizza shop'
+  let input = await ask(pizzaMessage)
+}
+
 
 async function start() {
   const welcomeMessage = `182 Main St.
 You are standing on Main Street between Church and South Winooski.
 There is a door here. A keypad sits on the handle.
 On the door is a handwritten sign.`;
-  let answer = await ask(welcomeMessage);
-  console.log('Now write your code to make this work!');
+  let input = await ask(welcomeMessage);
+if (input === 'read sign'){
+  console.log(street.sign)
+} if (input === "proceed to foyer"){
+  foyer()
+}
   process.exit();
 }
+
+
+start();
