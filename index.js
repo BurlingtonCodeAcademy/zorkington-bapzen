@@ -39,10 +39,10 @@ async function streetSide(){
   const streetMessage = 'We are where we started standing on the street.'
   let input = await ask(streetMessage)
   if(input=== 'return to foyer'){
-    foyer()
+    await foyer()
   }
   if(input === 'go to Mr. Mikes'){
-    pizzaShop()
+   await  pizzaShop()
   }
 }
 
@@ -55,7 +55,7 @@ async function foyer(){
   if(inputFoyer === 'take stairs'){
     await stairwayUp()
   } if (inputFoyer === 'exit to street'){
-    streetSide()
+    await streetSide()
   }
 }
 
@@ -90,6 +90,12 @@ await foyer()
 async function pizzaShop(){
   const pizzaMessage = 'you have entered the pizza shop'
   let input = await ask(pizzaMessage)
+  if (input === 'eat pizza'){
+process.exit();
+  }
+  if(input === 'go back to street'){
+    await streetSide()
+  }
 }
 
 
@@ -101,7 +107,10 @@ On the door is a handwritten sign.`;
   let input = await ask(welcomeMessage);
 if (input === 'read sign'){
   console.log(street.sign)
+  let input = await ask('Now what?')
+  
 } if (input === "proceed to foyer"){
+  console.log("anyting")
   await foyer()
 }
   process.exit();
