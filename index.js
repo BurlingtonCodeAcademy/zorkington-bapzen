@@ -20,8 +20,22 @@ let pathStates = {
 
 };
 
+const roomLookUp = {
+
+}
+
 
 let currentState = "green";
+
+const player = {
+  name: null,
+  currentRoom: null,
+  inventory: ["pocket watch", 'map'],
+  status: [],
+}
+
+
+
 
 let street = {
 
@@ -29,28 +43,36 @@ let street = {
     description: 'You are standing on Main Street between Church and South Winooski. There is a door here. A keypad sits on the handle. On the door is a handwritten sign.',
     lock: true,
     sign: 'The sign says "Welcome to Burlington Code Academy! Come on up to the third floor. If the door is locked, use the code "12345".',
-    takeSign: 'That would be selfish. How will other students find their way?'
+    takeSign: 'That would be selfish. How will other students find their way?',
+    inventory: ['sign']
 }
 
 let foyer = {
 
   name: 'foyer',
   description: '',
+  inventory: ['newspaper', 'shoes', 'sign']
+
 }
 
 let classroom = {
   name: 'Classroom',
-  description: 'BCA Class, "Abandon all hope, ye who enter here."'
+  description: 'BCA Class, "Abandon all hope, ye who enter here."',
+  inventory: ['chairs', 'knowledge']
 }
 
 let pizzaplace = {
   name: 'Mr. Mike\'s',
-  description: 'Pizza place next door'
+  description: 'Pizza place next door',
+  inventory: ['pizza']
 }
 
 let stairway = {
   sign: "Welcome to the classroom. To enter please enter code 12345"
+
 }
+
+
 
 function enterState(newState) {
   let validTransitions = states[currentState].canChangeTo;
@@ -61,7 +83,7 @@ function enterState(newState) {
   }
 }
 
-async function street(){
+async function streetSide(){
   const streetMessage = 'We are where we started standing on the street.'
   let input = await ask(streetMessage)
   if(input=== 'return to foyer'){
@@ -72,17 +94,20 @@ async function street(){
   }
 }
 
-async function foyer(){
+
+
+async function foyerEntry(){
   //change to state 
   //if chain of possible actions within room
   const foyerMessage = 'Welcome to the foyer. A small room with a staircase which you are standing at the bottom of. There is a newstand '
-  console.log(foyerMessage)
-  let input = await ask('What would you like to do?')
+
+  let input = await ask(foyerMessage)
   if(input === 'take stairs'){
     stairwayUp()
   } if (input === 'exit to street'){
-    street()
+    streetSide()
   }
+  
 }
 
 
@@ -94,14 +119,14 @@ async function stairwayUp() {
     console.log(stairway.sign)
   }
   if(input === 'enter code 12345'){
-    classroom()
+    classRoom()
   }
 }
 
   //if statements for possible actions
 
 
-async function classroom(){
+async function classRoom(){
   const classroomMessage = 'You\'ve entered the classroom. Bob is teaching because you are late'
  let input = await ask(classroomMessage)
   // if statement allowing actions and results ---if(input === 'action'){result}
@@ -109,26 +134,31 @@ async function classroom(){
 
   }
 if(input === 'go back down stairs'){
-foyer()
+foyerEntry()
 }
 }
 
 async function pizzaShop(){
   const pizzaMessage = 'you have entered the pizza shop'
   let input = await ask(pizzaMessage)
+  if (input === ''){
+    console.log('')
+  }
 }
 
 
 async function start() {
-  const welcomeMessage = `182 Main St.
-You are standing on Main Street between Church and South Winooski.
-There is a door here. A keypad sits on the handle.
-On the door is a handwritten sign.`;
-  let input = await ask(welcomeMessage);
+ let input = await ask(console.log(street.description));
 if (input === 'read sign'){
   console.log(street.sign)
 } if (input === "proceed to foyer"){
-  foyer()
+  foyerEntry()
+}
+if (input === 'take sign'){
+  player.inventory.push('sign')
+  console.log(player.inventory)
+  street.inventory.pop()
+  console.log(street.inventory)
 }
   process.exit();
 }
