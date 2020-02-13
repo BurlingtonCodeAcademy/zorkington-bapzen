@@ -20,8 +20,13 @@ let pathStates = {
 
 };
 
+//rooms look up
 const roomLookUp = {
 
+  street: 'street',
+  foyer: 'foyer',
+  muddy: 'muddy',
+  pizza: 'pizza'
 }
 
 
@@ -32,6 +37,7 @@ const player = {
   currentRoom: null,
   inventory: ["pocket watch", 'map'],
   status: [],
+
 }
 
 
@@ -83,110 +89,92 @@ function enterState(newState) {
   }
 }
 
-async function streetSide() {
-  const streetMessage = 'We are where we started standing on the street.'
-  let input = await ask(streetMessage)
-  if (input === 'return to foyer') {
-    foyer()
-  }
-  if (input === 'go to Mr. Mikes') {
-    pizzaShop()
-  }
-}
 
-
-
-async function foyerEntry(){
-  //change to state 
-  //if chain of possible actions within room
-  const foyerMessage = 'Welcome to the foyer. A small room with a staircase which you are standing at the bottom of. There is a newstand '
-
-  let input = await ask(foyerMessage)
-  if(input === 'take stairs'){
-    stairwayUp()
-  } if (input === 'exit to street'){
-    streetSide()
-  }
-  
-}
-
-
-async function stairwayUp() {
-  const stairwayMessage = 'You\'ve gone up the stiars and reached a door with a sign '
-  console.log(stairwayMessage)
-  let input = await ask(stairwayMessage)
-  if (input === 'read sign') {
-    console.log(stairway.sign)
-  }
-  if (input === 'enter code 12345') {
-    classroom()
-  }
-}
-
-//if statements for possible actions
-
-
-async function classRoom() {
-  const classroomMessage = 'You\'ve entered the classroom. Bob is teaching because you are late'
-  let input = await ask(classroomMessage)
-  // if statement allowing actions and results ---if(input === 'action'){result}
-  if (input === 'sit and listen') {
-
-  }
-if(input === 'go back down stairs'){
-foyerEntry()
-}
-}
-
-async function pizzaShop() {
-  const pizzaMessage = 'you have entered the pizza shop'
-  let input = await ask(pizzaMessage)
-  if (input === ''){
-    console.log('')
-  }
-}
-
-// async function game() {
-  // command = await ask('Do something!');
-// }
 
 async function start() {
-
-  let streetInput = await ask(street.description + '\n');
-
-  if (streetInput === 'read sign') {
-    console.log(street.sign + '\n');
-  };
-
-  streetInput = await (ask('What next? '));
-
-  if (streetInput === 'check lock') {
-    if (street.lock === true) {
-      console.log("Door is locked");
-    };
-
-  streetInput = await (ask('What next? '));
-
-    if (streetInput === "proceed to foyer") {
-      foyerEntry();
+  console.log(`182 Main Street 
+  You are standing on Main Street between Church and South Winooski.
+  There is a door here. A keypad sits on the handle.
+  On the door is a handwritten sign.`)
+  player.name = null;
+  let userName = await ask(`What is your name?`);
+  player.name = userName;
+  let input = await ask('Would you like to go inside?')
+  if(input === 'gargle'){
     
-  };
-  if (streetInput === 'take sign'){
-    player.inventory.push('sign')
-
-    console.log(player.inventory)
-
-    street.inventory.pop()
-
-    console.log(street.inventory)
   }
-  
-  
-  }
-
-
-  process.exit();
 }
 
 
 start();
+
+
+
+
+//------------------------------------old functions
+// async function streetSide() {
+  // const streetMessage = 'We are where we started standing on the street.'
+  // let input = await ask(streetMessage)
+  // if (input === 'return to foyer') {
+    // foyer()
+  // }
+  // if (input === 'go to Mr. Mikes') {
+    // pizzaShop()
+  // }
+// }
+// 
+// 
+// 
+// async function foyerEntry(){
+  // change to state 
+  // if chain of possible actions within room
+  // const foyerMessage = 'Welcome to the foyer. A small room with a staircase which you are standing at the bottom of. There is a newstand '
+// 
+  // let input = await ask(foyerMessage)
+  // if(input === 'take stairs'){
+    // stairwayUp()
+  // } if (input === 'exit to street'){
+    // streetSide()
+  // }
+  // 
+// }
+// 
+// 
+// async function stairwayUp() {
+  // const stairwayMessage = 'You\'ve gone up the stiars and reached a door with a sign '
+  // console.log(stairwayMessage)
+  // let input = await ask(stairwayMessage)
+  // if (input === 'read sign') {
+    // console.log(stairway.sign)
+  // }
+  // if (input === 'enter code 12345') {
+    // classroom()
+  // }
+// }
+// 
+i//f statements for possible actions
+// 
+// 
+// async function classRoom() {
+  // const classroomMessage = 'You\'ve entered the classroom. Bob is teaching because you are late'
+  // let input = await ask(classroomMessage)
+  //if statement allowing actions and results ---if(input === 'action'){result}
+  // if (input === 'sit and listen') {
+// 
+  // }
+// if(input === 'go back down stairs'){
+// foyerEntry()
+// }
+// }
+// 
+// async function pizzaShop() {
+  // const pizzaMessage = 'you have entered the pizza shop'
+  // let input = await ask(pizzaMessage)
+  // if (input === ''){
+    // console.log('')
+  // }
+// }
+
+// async function game() {
+  // command = await ask('Do something!');
+// }
