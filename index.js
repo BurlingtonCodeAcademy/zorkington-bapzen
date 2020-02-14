@@ -18,49 +18,59 @@ let pathStates = {
 	pizza: { canMoveTo: [ 'muddy' ] }
 };
 
-//rooms look up
-const roomLookUp = {
-	street: 'street',
-	foyer: 'foyer',
-	muddy: 'muddy',
-	pizza: 'pizza'
+
+
+
+const objects = {
+	sign: 'no',
+	newspaper: 'yes'
 };
 
 let currentState = 'green';
+let curRoom;
+// const foyerMessage = 'welcome to the foyer';
 
 const player = {
 	name: null,
 	currentRoom: null,
 	inventory: [ 'pocket watch', 'map' ],
 	status: [],
-	enter: (room) => {
-    if(player.currentRoom.roomCanGoTo.includes(room)){
-    player.currentRoom = room.split()
-    console.log(player.currentRoom.description)
-    } else {
-      console.log('I can not go to that room')
-      console.log(player.currentRoom.roomCanGoTo)
-      console.log(room)
-      play()
-    }
-	},
+	
+	// enter: (room) => {
+		
+	// 	//if (roomCanGoTo['street'].includes(room)) {
+      
+  //     player.currentRoom = room.toString();
+  //      curRoom = room.toString();
+  //      console.log({player})
+  //      console.log(curRoom)
+  //     console.log(this.name + ' ' + this.description);
+      
+	// 	} else {
+	// 		console.log('I can not go to that room');
+	// 		console.log(player.currentRoom.roomCanGoTo);
+	// 		console.log(room);
+	// 		play();
+	// 	}
+	// 	return curRoom
+	// },
 	read: () => {
-		return street.sign;
+		return player.currentRoom.sign;
 	},
 	take: (item) => {
 		player.inventory.push(item);
 		street.inventory.pop();
-  },
-  drop: (item) => {
-    player.inventory.pop()
-    street.inventory.push(item)
-  }
+	},
+	drop: (item) => {
+		player.inventory.pop();
+		street.inventory.push(item);
+	}
 };
 
 const actions = {
 	read: [ 'read', 'view' ],
-  take: [ 'take', 'grab' ],
-  drop: ['drop', 'let go'],
+	take: [ 'take', 'grab' ],
+	drop: [ 'drop', 'let go' ],
 	accept: [ 'yes', 'i would' ],
 	enter: [ 'enter', 'open' ]
 };
@@ -73,48 +83,79 @@ let street = {
 	sign:
 		'The sign says "Welcome to Burlington Code Academy! Come on up to the third floor. If the door is locked, use the code "12345".',
 	takeSign: 'That would be selfish. How will other students find their way?',
-  inventory: [ 'sign' ],
-  roomCanGoTo: ['foyer', 'pizza place']
+	inventory: [ 'sign' ],
+	roomCanGoTo: [ 'foyer', 'pizza place' ]
 };
 
 let foyer = {
-	name: 'foyer',
-	description: '',
-  inventory: [ 'newspaper', 'shoes', 'sign' ],
-  roomCanGoTo: ['stairway', 'street']
-
-};
+	name: 'Foyer',
+	description: 'Welcome to the foyer, there is a newstand with the latest 7days and a stairway up to class',
+	inventory: [ 'newspaper', 'shoes', 'sign' ],
+	roomCanGoTo: [ 'stairway', 'street' ],
+  sign: 'Class in progress up stairs',
+  }
 
 let classroom = {
 	name: 'Classroom',
 	description: 'BCA Class, "Abandon all hope, ye who enter here."',
-  inventory: [ 'chairs', 'knowledge' ],
-  roomCanGoTo: ['stairway']
-
+	inventory: [ 'chairs', 'knowledge' ],
+	roomCanGoTo: [ 'stairway' ]
 };
 
 let pizzaplace = {
 	name: "Mr. Mike's",
 	description: 'Pizza place next door',
-  inventory: [ 'pizza' ],
-  roomCanGoTo: ['street']
-
+	inventory: [ 'pizza' ],
+	roomCanGoTo: [ 'street' ]
 };
 
 let stairway = {
-  sign: 'Welcome to the classroom. To enter please enter code 12345',
-  roomCanGoTo: ['foyer', 'classroom']
-
+	sign: 'Welcome to the classroom. To enter please enter code 12345',
+	roomCanGoTo: [ 'foyer', 'classroom' ]
 };
 
-function enterState(newState) {
-	let validTransitions = states[currentState].canChangeTo;
-	if (validTransitions.includes(newState)) {
-		currentState = newState;
-	} else {
-		throw 'Invalid state transition attempted - from ' + currentState + ' to ' + newState;
-	}
+//rooms look up
+const roomLookUp = {
+	'street': street,
+	'foyer': foyer,
+  //'muddy': muddy,
+  'stairway': stairway,
+  'pizzaplace': pizzaplace,
+  'classroom': classroom
+};
+
+const roomCanGoTo = {
+	'street': [ 'pizza place', 'foyer'],
+  'foyer': [ 'stairway', 'street' ],
+  'classroom': ['stairway'],
+  'stairway': ['classroom', 'foyer'],
+  'pizzaplace': ['street']
+};
+
+// function enterState(newState) {
+	// let validTransitions = states[currentState].canChangeTo;
+	// if (validTransitions.includes(newState)) {
+		// currentState = newState;
+	// } else {
+		// throw 'Invalid state transition attempted - from ' + currentState + ' to ' + newState;
+	// }
+// }
+
+
+function enter(roomObj, room) {
+if (roomObj.roomCanGoTo){
+	player.currentRoom = roomLookUp.room;
+  console.log(roomObj.roomCanGoTo)
+	console.log({player})
+	console.log({roomObj})
+	entry = (roomObj.name + ' ' + roomObj.description);
+return entry;
+} else {
+  console.log('You can not get there from here.')
+  play()
 }
+}
+
 
 async function play() {
 	let input = await ask('\n>');
@@ -125,32 +166,40 @@ async function play() {
 	console.log(inputArray);
 
 	if (actions['read'].includes(useAction)) {
-    //read an item
-    console.log(player.read());
-    play()
-    
-  } else if (actions['take'].includes(useAction)){
-    //add object to pplayer inventor and remove it from room inventory
+		//read an item
+		console.log(player.read());
+		play();
+	} else if (actions['take'].includes(useAction)) {
+		//add object to player inventory and remove it from room inventory
     player.take(useItem);
-    console.log({player});
-    console.log({street})
-    play()
-  } else if (actions['enter'].includes(useAction)){
-    //enter a room
-    player.enter(useItem);
-    play()
-  } else if (inputClean === 'exit'){
-    //exit statemnt
-    console.log(
-    `Thank you for playing
-    Good Bye`)
-    process.exit()
-  }
-  else {
-		console.log("I don't know how to  " + inputArray[0]);
-    console.log({player})
-    play();
+		console.log({ player });
+		console.log({ street });
+		play();
+	} else if (actions['enter'].includes(useAction)) {
+  //enter a room
+  	if (roomCanGoTo[currentRoom].includes(useItem)){
+		  console.log(enter(roomLookUp[useItem], useItem));
+  	} else {
+  	  console.log('You cant get there from here')
+  	}
+  //console.log(roomLookUp[useItem]);
+  //enter(roomLookUp.useItem);
+  //console.log(entry);
+    //let useItem = input.toString
+
     
+		play();
+	} else if (inputClean === 'exit') {
+		//exit statemnt
+		console.log(
+			`Thank you for playing
+    Good Bye`
+		);
+		process.exit();
+	} else {
+		console.log("I don't know how to  " + inputArray[0]);
+		console.log({ player });
+		play();
 	}
 }
 
