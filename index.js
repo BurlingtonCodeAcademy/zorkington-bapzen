@@ -33,8 +33,9 @@ const player = {
 	currentRoom: null,
 	inventory: [ 'pocket watch', 'map' ],
 	status: [],
-	enter: () => {
-		return this.name + '\n' + this.description;
+	enter: (room) => {
+    player.currentRoom = useItem
+    console.log(player.currentRoom.description)
 	},
 	read: () => {
 		return street.sign;
@@ -111,11 +112,15 @@ async function play() {
     console.log({player});
     console.log({street})
     play()
+  } else if (actions['enter'].includes(useAction)){
+    player.enter(useItem);
+    play()
   }
   else {
 		console.log("I don't know how to  " + inputArray[0]);
-    play();
     console.log({player})
+    play();
+    
 	}
 }
 
