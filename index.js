@@ -34,7 +34,8 @@ const player = {
 	inventory: [ 'pocket watch', 'map' ],
 	status: [],
 	enter: (room) => {
-    player.currentRoom = useItem
+    if()
+    player.currentRoom = room.split()
     console.log(player.currentRoom.description)
 	},
 	read: () => {
@@ -43,12 +44,17 @@ const player = {
 	take: (item) => {
 		player.inventory.push(item);
 		street.inventory.pop();
-	}
+  },
+  drop: (item) => {
+    player.inventory.pop()
+    street.inventory.push(item)
+  }
 };
 
 const actions = {
 	read: [ 'read', 'view' ],
-	take: [ 'take', 'grab' ],
+  take: [ 'take', 'grab' ],
+  drop: ['drop', 'let go'],
 	accept: [ 'yes', 'i would' ],
 	enter: [ 'enter', 'open' ]
 };
@@ -61,29 +67,38 @@ let street = {
 	sign:
 		'The sign says "Welcome to Burlington Code Academy! Come on up to the third floor. If the door is locked, use the code "12345".',
 	takeSign: 'That would be selfish. How will other students find their way?',
-	inventory: [ 'sign' ]
+  inventory: [ 'sign' ],
+  roomCanGoTo: ['foyer', 'pizza place']
 };
 
 let foyer = {
 	name: 'foyer',
 	description: '',
-	inventory: [ 'newspaper', 'shoes', 'sign' ]
+  inventory: [ 'newspaper', 'shoes', 'sign' ],
+  roomCanGoTo: ['stairway', 'street']
+
 };
 
 let classroom = {
 	name: 'Classroom',
 	description: 'BCA Class, "Abandon all hope, ye who enter here."',
-	inventory: [ 'chairs', 'knowledge' ]
+  inventory: [ 'chairs', 'knowledge' ],
+  roomCanGoTo: ['stairway']
+
 };
 
 let pizzaplace = {
 	name: "Mr. Mike's",
 	description: 'Pizza place next door',
-	inventory: [ 'pizza' ]
+  inventory: [ 'pizza' ],
+  roomCanGoTo: ['street']
+
 };
 
 let stairway = {
-	sign: 'Welcome to the classroom. To enter please enter code 12345'
+  sign: 'Welcome to the classroom. To enter please enter code 12345',
+  roomCanGoTo: ['foyer', 'classroom']
+
 };
 
 function enterState(newState) {
@@ -104,17 +119,26 @@ async function play() {
 	console.log(inputArray);
 
 	if (actions['read'].includes(useAction)) {
+    //read an item
     console.log(player.read());
     play()
     
   } else if (actions['take'].includes(useAction)){
+    //add object to pplayer inventor and remove it from room inventory
     player.take(useItem);
     console.log({player});
     console.log({street})
     play()
   } else if (actions['enter'].includes(useAction)){
+    //enter a room
     player.enter(useItem);
     play()
+  } else if (inputClean === 'exit'){
+    //exit statemnt
+    console.log(
+    `Thank you for playing
+    Good Bye`)
+    process.exit()
   }
   else {
 		console.log("I don't know how to  " + inputArray[0]);
