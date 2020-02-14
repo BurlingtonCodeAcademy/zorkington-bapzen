@@ -34,9 +34,15 @@ const player = {
 	inventory: [ 'pocket watch', 'map' ],
 	status: [],
 	enter: (room) => {
-    if()
+    if(player.currentRoom.roomCanGoTo.includes(room)){
     player.currentRoom = room.split()
     console.log(player.currentRoom.description)
+    } else {
+      console.log('I can not go to that room')
+      console.log(player.currentRoom.roomCanGoTo)
+      console.log(room)
+      play()
+    }
 	},
 	read: () => {
 		return street.sign;
