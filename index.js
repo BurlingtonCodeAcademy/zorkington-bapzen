@@ -37,6 +37,24 @@ const player = {
   currentRoom: null,
   inventory: ["pocket watch", 'map'],
   status: [],
+  enter : ()=>{
+    return(this.name + '\n' + this.description)
+  },
+  read : ()=>{
+    return("read")
+  },
+  take : (item)=>{
+    player.inventory.push(item)
+    this.currentRoom.pop()
+  }
+
+}
+
+const actions = {
+  read : ['read', 'view'],
+  take : ['take', 'grab'],
+  accept : ['yes', 'i would'],
+  enter : ['enter', 'open']
 
 }
 
@@ -89,6 +107,21 @@ function enterState(newState) {
   }
 }
 
+async function play() {
+let input = await ask('\n>')
+let inputClean = input.toLowerCase()
+let inputArray = inputClean.split(' ')
+let useAction = inputArray[0]
+let useItem = inputArray[1]
+console.log(inputArray)
+
+if(inputArray.includes(actions['read'])){
+player.read()
+} else {
+console.log('I don\'t know how to' + inputArray[0] )
+play()
+}
+}
 
 
 async function start() {
@@ -97,13 +130,23 @@ async function start() {
   There is a door here. A keypad sits on the handle.
   On the door is a handwritten sign.`)
   player.name = null;
-  let userName = await ask(`What is your name?`);
+  let userName = await ask(`Oh wait 
+  First what is your name? \n`);
   player.name = userName;
-  let input = await ask('Would you like to go inside?')
-  if(input === 'gargle'){
-    
+  console.log(`Alright ${userName} welcome to your first day of class.`)
+  
+  // if answer is affirmative go inside if not('gargle') repeat question
+ let input = await ask('type yes to start your day\n')
+ if(input === 'yes')  { 
+  player.currentRoom = street
+ play()
   }
-}
+  else {
+    console.log("I don\'t know how to " + input)
+  }
+
+  }
+
 
 
 start();
@@ -152,7 +195,7 @@ start();
   // }
 // }
 // 
-i//f statements for possible actions
+//if statements for possible actions
 // 
 // 
 // async function classRoom() {
