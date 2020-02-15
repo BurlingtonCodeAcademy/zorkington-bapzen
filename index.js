@@ -69,6 +69,14 @@ const player = {
 	drop: (item) => {
 		player.inventory.pop();
 		street.inventory.push(item);
+	},
+	open: (door) => {
+		if (curRoom.lock === true) {
+			console.log(curRoom.lockMsg);
+		} else {
+			console.log('\nThe door opens....');
+			return 
+		};
 	}
 };
 
@@ -84,11 +92,12 @@ let street = {
 	name: '182 Main St.',
 	description:
 		'You are standing on Main Street between Church and South Winooski. There is a door here. A keypad sits on the handle. On the door is a handwritten sign.',
+	lockMsg: 'The door is locked. There is a keypad on the door handle.',
 	lock: true,
 	sign:
 		'The sign says "Welcome to Burlington Code Academy! Come on up to the third floor. If the door is locked, use the code "12345".',
 	takeSign: 'That would be selfish. How will other students find their way?',
-	inventory: [],
+	inventory: [],	//This inventory initialized without 'sign' so that there is none to take.
 	roomCanGoTo: [ 'foyer', 'pizza place' ]
 };
 
@@ -177,17 +186,20 @@ async function play() {
 	} else if (actions['take'].includes(useAction)) {
 		//add object to player inventory and remove it from room inventory
 		player.take(useItem);
-		
-		console.log({ player });
-		console.log({ street });
+		// console.log({ player });
+		// console.log({ street });
 		play();
-	} else if (actions['enter'].includes(useAction)) {
+	}
+	 else if (actions['enter'].includes(useAction)) {
   //enter a room
-  	if (roomCanGoTo[currentRoom].includes(useItem)){
-		  console.log(enter(roomLookUp[useItem], useItem));
-  	} else {
-  	  console.log('You cant get there from here')
-  	}
+		player.open(useItem);
+		
+  	// if (roomCanGoTo[currentRoom].includes(useItem)){
+		//   console.log(enter(roomLookUp[useItem], useItem));
+		// 
+  	// {
+  	//   console.log('You cant get there from here')
+  	// }
   //console.log(roomLookUp[useItem]);
   //enter(roomLookUp.useItem);
   //console.log(entry);
