@@ -83,6 +83,14 @@ const player = {
 			return curRoom;
 		};
 	},
+	enter: (newRoom) => {
+		if (roomCanGoTo.curRoom.includes(roomLookUp[newRoom])) {
+			curRoom = newRoom;
+			console.log(curRoom.name + ' ' + curRoom.description);
+		} else {
+			console.log('You can\'t get there from here.')
+		};
+	},
 	combo: (keycombo) => {
 		if (keycombo === curRoom.lockCombo) {
 			curRoom.lock = false;
@@ -215,21 +223,22 @@ async function play() {
 	}
 	 else if (actions['enter'].includes(useAction)) {
   //enter a room
-  if(roomCanGoTo[fromRoom].includes(useItem)){
-    console.log(enter(roomLookUp[useItem]))
-		if (useItem !== 'code') {
-		player.open(useItem);
-		} else if (useItem === 'code') {
+//   if(roomCanGoTo[fromRoom].includes(useItem)){
+	// console.log(enter(roomLookUp[useItem]))
+	if (useItem !== 'code') { 
+			player.open(useItem);
+	} else if (useItem === 'code') {
 			let keycombo = await (ask ('Enter the secret code: '));
 			player.combo(keycombo);
-		} else {
-			player.open(curRoom);
+	} else {
+		player.enter(fromRoom);
+			// player.open(curRoom);
 		};
 		play();
-	} else {
-    console.log('You can\'t get there from here.')
-    player()
-  }} 
+	// } else{
+    // console.log('You can\'t get there from here.')
+    // player()
+  } 
 	else if (actions['show'].includes(useAction)) {
 		player.show();
 		play();
