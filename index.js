@@ -26,7 +26,7 @@ const objects = {
 	newspaper: 'yes'
 };
 
-let currentState = 'green';
+// let currentState = 'green';
 let curRoom;
 // const foyerMessage = 'welcome to the foyer';
 
@@ -58,8 +58,13 @@ const player = {
 		return player.currentRoom.sign;
 	},
 	take: (item) => {
+		if (curRoom.inventory.includes(item)) {
 		player.inventory.push(item);
-		street.inventory.pop();
+		curRoom.inventory.pop();
+		console.log('You have taken the ' + item + '.');
+		} else {
+			console.log('\nThat would be selfish. How will other students find their way?');
+		}
 	},
 	drop: (item) => {
 		player.inventory.pop();
@@ -83,7 +88,7 @@ let street = {
 	sign:
 		'The sign says "Welcome to Burlington Code Academy! Come on up to the third floor. If the door is locked, use the code "12345".',
 	takeSign: 'That would be selfish. How will other students find their way?',
-	inventory: [ 'sign' ],
+	inventory: [],
 	roomCanGoTo: [ 'foyer', 'pizza place' ]
 };
 
@@ -171,7 +176,8 @@ async function play() {
 		play();
 	} else if (actions['take'].includes(useAction)) {
 		//add object to player inventory and remove it from room inventory
-    player.take(useItem);
+		player.take(useItem);
+		
 		console.log({ player });
 		console.log({ street });
 		play();
@@ -217,6 +223,7 @@ async function start() {
 	// if answer is affirmative go inside if not('gargle') repeat question
 	let input = await ask('type yes to start your day\n');
 	if (input === 'yes') {
+		curRoom = street;
 		player.currentRoom = street;
 		play();
 	} else {
