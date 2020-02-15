@@ -83,13 +83,10 @@ const player = {
 			return curRoom;
 		};
 	},
-	enter: (newRoom) => {
-		if (roomCanGoTo.curRoom.includes(roomLookUp[newRoom])) {
+	enter: (newRoom) => {	
 			curRoom = newRoom;
-			console.log(curRoom.name + ' ' + curRoom.description);
-		} else {
-			console.log('You can\'t get there from here.')
-		};
+			console.log({player})
+			console.log(curRoom.name + ' ' + curRoom.description);	
 	},
 	combo: (keycombo) => {
 		if (keycombo === curRoom.lockCombo) {
@@ -155,7 +152,7 @@ let pizzaplace = {
 };
 
 let stairway = {
-  name: 'Stiarway',
+  name: 'Stairway',
   description: 'You have entered the stairway connecting the classroom and foyer',
 	sign: 'Welcome to the classroom. To enter please enter code 12345',
   roomCanGoTo: [ 'foyer', 'classroom' ]
@@ -190,15 +187,15 @@ const roomCanGoTo = {
 // }
 
 
-function enter(roomObj) {
-	player.currentRoom = roomObj;
-  // console.log(roomObj.roomCanGoTo)
+// function enter(roomObj) {
+	// player.currentRoom = roomObj;
+//   console.log(roomObj.roomCanGoTo)
 	// console.log({player})
 	// console.log({roomObj})
-	entry = (roomObj.name + ' ' + roomObj.description);
-return entry;
+	// entry = (roomObj.name + ' ' + roomObj.description);
+// return entry;
 
-}
+//}
 
 
 async function play() {
@@ -225,19 +222,23 @@ async function play() {
   //enter a room
 //   if(roomCanGoTo[fromRoom].includes(useItem)){
 	// console.log(enter(roomLookUp[useItem]))
-	if (useItem !== 'code') { 
+	if (roomCanGoTo.curRoom.includes(fromRoom)) {
+		if (useItem !== 'code') { 
 			player.open(useItem);
-	} else if (useItem === 'code') {
+		} else if (useItem === 'code') {
 			let keycombo = await (ask ('Enter the secret code: '));
 			player.combo(keycombo);
-	} else {
+		} else {
 		player.enter(fromRoom);
 			// player.open(curRoom);
-		};
-		play();
+		}
+	} else {
+		console.log('You can\'t get there from here.');
+	};
+		//play();
 	// } else{
     // console.log('You can\'t get there from here.')
-    // player()
+    play()
   } 
 	else if (actions['show'].includes(useAction)) {
 		player.show();
