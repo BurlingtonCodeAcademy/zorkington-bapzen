@@ -102,7 +102,7 @@ let street = {
 	description:
 		'You are standing on Main Street between Church and South Winooski. There is a door here. A keypad sits on the handle. On the door is a handwritten sign.',
 	lockMsg: 'The door is locked. There is a keypad on the door handle.',
-	tryLockMsg: 'The door remains locked. Try again.',
+	tryLockMsg: 'Bzzzzt! The door is still locked.',
 	unlockMsg: '\nSuccess! The door opens. \nYou enter the foyer and the door shuts behind you...',
 	lock: true,
 	lockCombo: '12345',
