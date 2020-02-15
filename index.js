@@ -77,6 +77,15 @@ const player = {
 			console.log('\nThe door opens....');
 			return 
 		};
+	},
+	combo: (keycombo) => {
+		if (keycombo === curRoom.lockCombo) {
+			curRoom.lock = false;
+			console.log(curRoom.unlockMsg);
+			curRoom = 'foyer';
+		} else {
+			console.log(curRoom.tryLockMsg);
+		}
 	}
 };
 
@@ -85,7 +94,7 @@ const actions = {
 	take: [ 'take', 'grab' ],
 	drop: [ 'drop', 'let go' ],
 	accept: [ 'yes', 'i would' ],
-	enter: [ 'enter', 'open' ]
+	enter: [ 'enter', 'open', 'code' ]
 };
 
 let street = {
@@ -93,7 +102,10 @@ let street = {
 	description:
 		'You are standing on Main Street between Church and South Winooski. There is a door here. A keypad sits on the handle. On the door is a handwritten sign.',
 	lockMsg: 'The door is locked. There is a keypad on the door handle.',
+	tryLockMsg: 'The door remains locked. Try again.',
+	unlockMsg: '\nSuccess! The door opens. \nYou enter the foyer and the door shuts behind you...',
 	lock: true,
+	lockCombo: '12345',
 	sign:
 		'The sign says "Welcome to Burlington Code Academy! Come on up to the third floor. If the door is locked, use the code "12345".',
 	takeSign: 'That would be selfish. How will other students find their way?',
@@ -192,7 +204,12 @@ async function play() {
 	}
 	 else if (actions['enter'].includes(useAction)) {
   //enter a room
+		if (useItem !== 'code') {
 		player.open(useItem);
+		} else if (useItem === 'code') {
+			let keycombo = await (ask ('Enter the secret code: '));
+			player.combo(keycombo);
+		}
 		
   	// if (roomCanGoTo[currentRoom].includes(useItem)){
 		//   console.log(enter(roomLookUp[useItem], useItem));
