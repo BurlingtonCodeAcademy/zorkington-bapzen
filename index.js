@@ -67,8 +67,13 @@ const player = {
 		}
 	},
 	drop: (item) => {
+		if (player.inventory.includes(item)) {
 		player.inventory.pop();
-		street.inventory.push(item);
+		curRoom.inventory.push(item);
+		console.log('You just dropped the ' + item);
+		} else {
+			console.log('Can\'t drop what you don\'t have.');
+		}
 	},
 	open: (door) => {
 		if (curRoom.lock === true) {
@@ -89,7 +94,7 @@ const player = {
 		}
 	},
 	show: (thing) => {
-		console.log('You are carrying: \n' + player.inventory.join());
+		console.log('You are carrying: \n' + player.inventory.join(', '));
 	}
 };
 
@@ -218,11 +223,16 @@ async function play() {
 		} else {
 			player.open(curRoom);
 		};
+		play();
 	}
 	else if (actions['show'].includes(useAction)) {
 		player.show();
 		play();
-	} else if (inputClean === 'exit') {
+	} else if (actions['drop'].includes(useAction)) {
+		player.drop(useItem);
+		play();
+	} 
+	else if (inputClean === 'exit') {
 	//exit statemnt
 	console.log(
 		`Thank you for playing
