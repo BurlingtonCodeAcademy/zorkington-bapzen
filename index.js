@@ -222,7 +222,7 @@ async function play() {
   //enter a room
 //   if(roomCanGoTo[fromRoom].includes(useItem)){
 	// console.log(enter(roomLookUp[useItem]))
-	if (roomCanGoTo.curRoom.includes(fromRoom)) {
+	if (roomCanGoTo[fromRoom].includes(useItem)) {
 		if (useItem !== 'code') { 
 			player.open(useItem);
 		} else if (useItem === 'code') {
