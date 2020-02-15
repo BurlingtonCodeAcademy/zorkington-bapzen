@@ -110,6 +110,8 @@ let pizzaplace = {
 };
 
 let stairway = {
+  name: 'Stiarway',
+  description: 'You have entered the stairway up to the classroom',
 	sign: 'Welcome to the classroom. To enter please enter code 12345',
 	roomCanGoTo: [ 'foyer', 'classroom' ]
 };
@@ -142,18 +144,14 @@ const roomCanGoTo = {
 // }
 
 
-function enter(roomObj, room) {
-if (roomObj.roomCanGoTo){
-	player.currentRoom = roomLookUp.room;
+function enter(roomObj) {
+	player.currentRoom = roomLookUp.roomObj;
   console.log(roomObj.roomCanGoTo)
 	console.log({player})
 	console.log({roomObj})
 	entry = (roomObj.name + ' ' + roomObj.description);
 return entry;
-} else {
-  console.log('You can not get there from here.')
-  play()
-}
+
 }
 
 
@@ -162,7 +160,8 @@ async function play() {
 	let inputClean = input.toLowerCase();
 	let inputArray = inputClean.split(' ');
 	let useAction = inputArray[0];
-	let useItem = inputArray[1];
+  let useItem = inputArray[1];
+  let fromRoom = inputArray[3]
 	console.log(inputArray);
 
 	if (actions['read'].includes(useAction)) {
@@ -177,7 +176,7 @@ async function play() {
 		play();
 	} else if (actions['enter'].includes(useAction)) {
   //enter a room
-  	if (roomCanGoTo[currentRoom].includes(useItem)){
+  	if (roomCanGoTo[fromRoom].includes(useItem)){
 		  console.log(enter(roomLookUp[useItem], useItem));
   	} else {
   	  console.log('You cant get there from here')
@@ -197,8 +196,9 @@ async function play() {
 		);
 		process.exit();
 	} else {
+    player.currentRoom = fromRoom
 		console.log("I don't know how to  " + inputArray[0]);
-		console.log({ player });
+		
 		play();
 	}
 }
