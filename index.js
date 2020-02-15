@@ -74,15 +74,16 @@ const player = {
 		if (curRoom.lock === true) {
 			console.log(curRoom.lockMsg);
 		} else {
-			console.log('\nThe door opens....');
-			return 
+			console.log(curRoom.name + '\n' + curRoom.description);
+			return curRoom;
 		};
 	},
 	combo: (keycombo) => {
 		if (keycombo === curRoom.lockCombo) {
 			curRoom.lock = false;
 			console.log(curRoom.unlockMsg);
-			curRoom = 'foyer';
+			curRoom = roomLookUp[curRoom.unlockRoom];
+			console.log(curRoom.name + '\n' + curRoom.description);
 		} else {
 			console.log(curRoom.tryLockMsg);
 		}
@@ -106,6 +107,7 @@ let street = {
 	unlockMsg: '\nSuccess! The door opens. \nYou enter the foyer and the door shuts behind you...',
 	lock: true,
 	lockCombo: '12345',
+	unlockRoom: 'foyer',
 	sign:
 		'The sign says "Welcome to Burlington Code Academy! Come on up to the third floor. If the door is locked, use the code "12345".',
 	takeSign: 'That would be selfish. How will other students find their way?',
@@ -115,7 +117,7 @@ let street = {
 
 let foyer = {
 	name: 'Foyer',
-	description: 'Welcome to the foyer, there is a newstand with the latest 7days and a stairway up to class',
+	description: 'You are in a foyer. Or maybe it\'s an antechamber. \nOr a vestibule. Or an entryway. Or an atrium. Or a narthex.\n But let\'s forget all that fancy flatlander vocabulary,\n and just call it a foyer. In Vermont, this is pronounced "FO-ee-yurr".\nA copy of Seven Days lies in a corner.',
 	inventory: [ 'newspaper', 'shoes', 'sign' ],
 	roomCanGoTo: [ 'stairway', 'street' ],
   sign: 'Class in progress up stairs',
@@ -209,7 +211,9 @@ async function play() {
 		} else if (useItem === 'code') {
 			let keycombo = await (ask ('Enter the secret code: '));
 			player.combo(keycombo);
-		}
+		} else {
+			player.open(curRoom);
+		};
 		
   	// if (roomCanGoTo[currentRoom].includes(useItem)){
 		//   console.log(enter(roomLookUp[useItem], useItem));
