@@ -145,7 +145,7 @@ const roomCanGoTo = {
 
 
 function enter(roomObj) {
-	player.currentRoom = roomLookUp.roomObj;
+	player.currentRoom = roomObj;
   console.log(roomObj.roomCanGoTo)
 	console.log({player})
 	console.log({roomObj})
