@@ -87,6 +87,9 @@ const player = {
 		} else {
 			console.log(curRoom.tryLockMsg);
 		}
+	},
+	show: (thing) => {
+		console.log('You are carrying: \n' + player.inventory.join());
 	}
 };
 
@@ -95,7 +98,8 @@ const actions = {
 	take: [ 'take', 'grab' ],
 	drop: [ 'drop', 'let go' ],
 	accept: [ 'yes', 'i would' ],
-	enter: [ 'enter', 'open', 'code' ]
+	enter: [ 'enter', 'open', 'code' ],
+	show: ['i', 'inventory']
 };
 
 let street = {
@@ -214,6 +218,23 @@ async function play() {
 		} else {
 			player.open(curRoom);
 		};
+	}
+	else if (actions['show'].includes(useAction)) {
+		player.show();
+		play();
+	} else if (inputClean === 'exit') {
+	//exit statemnt
+	console.log(
+		`Thank you for playing
+Good Bye`
+	);
+	process.exit();
+} else {
+	console.log("I don't know how to  " + inputArray[0]);
+	console.log({ player });
+	play();
+}
+}
 		
   	// if (roomCanGoTo[currentRoom].includes(useItem)){
 		//   console.log(enter(roomLookUp[useItem], useItem));
@@ -227,20 +248,7 @@ async function play() {
     //let useItem = input.toString
 
     
-		play();
-	} else if (inputClean === 'exit') {
-		//exit statemnt
-		console.log(
-			`Thank you for playing
-    Good Bye`
-		);
-		process.exit();
-	} else {
-		console.log("I don't know how to  " + inputArray[0]);
-		console.log({ player });
-		play();
-	}
-}
+	
 
 async function start() {
 	console.log(`182 Main Street 
