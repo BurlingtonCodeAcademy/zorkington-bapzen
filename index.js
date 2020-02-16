@@ -12,10 +12,10 @@ function ask(questionText) {
 
 // State machine for room transitions
 let pathStates = {
-	street: { canMoveTo: [ 'foyer', 'muddy' ] },
-	foyer: { canMoveTo: [ 'stairs', 'street' ] },
-	muddy: { canMoveTo: [ 'street', 'pizza' ] },
-	pizza: { canMoveTo: [ 'muddy' ] }
+	street: { canMoveTo: ['foyer', 'muddy'] },
+	foyer: { canMoveTo: ['stairs', 'street'] },
+	muddy: { canMoveTo: ['street', 'pizza'] },
+	pizza: { canMoveTo: ['muddy'] }
 };
 
 
@@ -33,50 +33,49 @@ let curRoom;
 const player = {
 	name: null,
 	currentRoom: null,
-	inventory: [ 'pocket watch', 'map' ],
+	inventory: ['pocket watch', 'map'],
 	status: [],
-	
+
 	enter: (room) => {
-		
+
 		//if (roomCanGoTo['street'].includes(room)) {
-      
-      player.currentRoom = room
-       curRoom = player.currentRoom;
-       console.log({player})
-	   console.log(curRoom)
-	   console.log(curRoom.name + '\n' + curRoom.description);
-	//    return curRoom;
-	//    return  this.name + ' ' + this.description
-      
-		
+
+		player.currentRoom = room
+		curRoom = player.currentRoom;
+		// console.log({ player })
+		// console.log(curRoom)
+		console.log(curRoom.name + '\n' + curRoom.description);
+
+
+
 	},
 	read: () => {
 		return player.currentRoom.sign;
 	},
 	take: (item) => {
 		if (curRoom.inventory.includes(item)) {
-		player.inventory.push(item);
-		curRoom.inventory.pop();
-		console.log('You have taken the ' + item + '.');
+			player.inventory.push(item);
+			curRoom.inventory.pop();
+			console.log('You have taken the ' + item + '.');
 		} else {
 			console.log('\nThat would be selfish. How will other students find their way?');
 		}
 	},
 	drop: (item) => {
 		if (player.inventory.includes(item)) {
-		player.inventory.pop();
-		curRoom.inventory.push(item);
-		console.log('You just dropped the ' + item);
+			player.inventory.pop();
+			curRoom.inventory.push(item);
+			console.log('You just dropped the ' + item);
 		} else {
 			console.log('Can\'t drop what you don\'t have.');
 		}
 	},
 	open: (door) => {
-		
+
 		// } else {
-			console.log(curRoom.name + '\n' + curRoom.description);
-			return curRoom;
-		
+		console.log(curRoom.name + '\n' + curRoom.description);
+		return curRoom;
+
 	},
 	combo: (keycombo) => {
 		if (keycombo === curRoom.lockCombo) {
@@ -94,11 +93,11 @@ const player = {
 };
 
 const actions = {
-	read: [ 'read', 'view' ],
-	take: [ 'take', 'grab' ],
-	drop: [ 'drop', 'let go' ],
-	accept: [ 'yes', 'i would' ],
-	enter: [ 'enter', 'open', 'code' ],
+	read: ['read', 'view'],
+	take: ['take', 'grab'],
+	drop: ['drop', 'let go'],
+	accept: ['yes', 'i would'],
+	enter: ['enter', 'open', 'code'],
 	show: ['i', 'inventory']
 };
 
@@ -116,23 +115,23 @@ let street = {
 		'The sign says "Welcome to Burlington Code Academy! Come on up to the third floor. If the door is locked, use the code "12345".',
 	takeSign: 'That would be selfish. How will other students find their way?',
 	inventory: [],	//This inventory initialized without 'sign' so that there is none to take.
-	roomCanGoTo: [ 'foyer', 'pizza place' ]
+	roomCanGoTo: ['foyer', 'pizza place']
 };
 
 let foyer = {
 	name: 'Foyer',
 	description: 'You are in a foyer. Or maybe it\'s an antechamber. \nOr a vestibule. Or an entryway. Or an atrium. Or a narthex.\n But let\'s forget all that fancy flatlander vocabulary,\n and just call it a foyer. In Vermont, this is pronounced "FO-ee-yurr".\nA copy of Seven Days lies in a corner.',
-	inventory: [ 'newspaper', 'shoes', 'sign' ],
-	roomCanGoTo: [ 'stairway', 'street' ],
-  sign: 'Class in progress up stairs',
-  lock: false
-  }
+	inventory: ['newspaper', 'shoes', 'sign'],
+	roomCanGoTo: ['stairway', 'street'],
+	sign: 'Class in progress up stairs',
+	lock: false
+}
 
 let classroom = {
 	name: 'Classroom',
 	description: 'BCA Class, "Abandon all hope, ye who enter here."',
-	inventory: [ 'chairs', 'knowledge' ],
-	roomCanGoTo: [ 'stairway' ],
+	inventory: ['chairs', 'knowledge'],
+	roomCanGoTo: ['stairway'],
 	lock: false
 
 };
@@ -140,47 +139,47 @@ let classroom = {
 let pizzaplace = {
 	name: "Mr. Mike's",
 	description: 'Pizza place next door',
-	inventory: [ 'pizza' ],
-	roomCanGoTo: [ 'street' ],
+	inventory: ['pizza'],
+	roomCanGoTo: ['street'],
 	lock: false
 };
 
 let stairway = {
-  name: 'Stiarway',
-  description: 'You have entered the stairway connecting the classroom and foyer',
+	name: 'Stairway',
+	description: 'You have entered the stairway connecting the classroom and foyer',
 	sign: 'Welcome to the classroom. To enter please enter code 12345',
-  roomCanGoTo: [ 'foyer', 'classroom' ],
-  lock: false
-  
+	roomCanGoTo: ['foyer', 'classroom'],
+	lock: false
+
 };
 
 //rooms look up
 const roomLookUp = {
 	'street': street,
 	'foyer': foyer,
-  //'muddy': muddy,
-  'stairway': stairway,
-  'pizzaplace': pizzaplace,
-  'classroom': classroom
-  
+	//'muddy': muddy,
+	'stairway': stairway,
+	'pizzaplace': pizzaplace,
+	'classroom': classroom
+
 
 };
 
 const roomCanGoTo = {
-	'street': [ 'pizzaplace', 'foyer'],
-  'foyer': [ 'stairway', 'street' ],
-  'classroom': ['stairway'],
-  'stairway': ['classroom', 'foyer'],
-  'pizzaplace': ['street']
+	'street': ['pizzaplace', 'foyer'],
+	'foyer': ['stairway', 'street'],
+	'classroom': ['stairway'],
+	'stairway': ['classroom', 'foyer'],
+	'pizzaplace': ['street']
 };
 
 // function enterState(newState) {
-	// let validTransitions = states[currentState].canChangeTo;
-	// if (validTransitions.includes(newState)) {
-		// currentState = newState;
-	// } else {
-		// throw 'Invalid state transition attempted - from ' + currentState + ' to ' + newState;
-	// }
+// let validTransitions = states[currentState].canChangeTo;
+// if (validTransitions.includes(newState)) {
+// currentState = newState;
+// } else {
+// throw 'Invalid state transition attempted - from ' + currentState + ' to ' + newState;
+// }
 // }
 
 
@@ -192,8 +191,8 @@ async function play() {
 	let inputClean = input.toLowerCase();
 	let inputArray = inputClean.split(' ');
 	let useAction = inputArray[0];
-  let useItem = inputArray[1];
-  let fromRoom = inputArray[3]
+	let useItem = inputArray[1];
+	let fromRoom = inputArray[3]
 	//console.log(inputArray);
 
 	if (actions['read'].includes(useAction)) {
@@ -207,32 +206,35 @@ async function play() {
 		// console.log({ street });
 		play();
 	}
-	 else if (actions['enter'].includes(useAction)) {
-  //enter a room
-  console.log({player})
-  if(roomCanGoTo[fromRoom].includes(useItem) && curRoom.lock === false) {
-    player.enter(roomLookUp[useItem]);
-	
-  } else if (roomCanGoTo[fromRoom].includes(useItem) && curRoom.lock == true){
-		console.log(useItem.lockMsg)
-			let keycombo = await (ask ('Enter the secret code: '));
+	else if (actions['enter'].includes(useAction)) {
+		//enter a room
+		// console.log({ player })
+		if (roomCanGoTo[fromRoom].includes(useItem) && curRoom.lock === false) {
+			player.enter(roomLookUp[useItem]);
+
+		} else if (roomCanGoTo[fromRoom].includes(useItem) && curRoom.lock === true) {
+			console.log(curRoom.lockMsg)
+			let keycombo = await (ask('Enter the secret code: '));
 			player.combo(keycombo);
+			// } else {
+			// 	player.open(curRoom);
+
+			// play();
 		} else {
-			player.open(curRoom);
-		};
-		play();
-	} else {
-    console.log('You can\'t get there from here.')
-    play()
-  }
-	 if (actions['show'].includes(useAction)) {
-		player.show();
-		play();
-	} else if (actions['drop'].includes(useAction)) {
-		player.drop(useItem);
-		play();
-	} 
-	else if (inputClean === 'exit') {
+			console.log('You can\'t get there from here.')
+			play()
+
+		}
+	play();
+
+} else if (actions['show'].includes(useAction)) {
+	player.show();
+	play();
+} else if (actions['drop'].includes(useAction)) {
+	player.drop(useItem);
+	play();
+}
+else if (inputClean === 'exit') {
 	//exit statemnt
 	console.log(
 		`Thank you for playing
@@ -245,20 +247,20 @@ Good Bye`
 	play();
 }
 }
-		
-  	// if (roomCanGoTo[currentRoom].includes(useItem)){
-		//   console.log(enter(roomLookUp[useItem], useItem));
-		// 
-  	// {
-  	//   console.log('You cant get there from here')
-  	// }
-  //console.log(roomLookUp[useItem]);
-  //enter(roomLookUp.useItem);
-  //console.log(entry);
-    //let useItem = input.toString
 
-    
-	
+// if (roomCanGoTo[currentRoom].includes(useItem)){
+//   console.log(enter(roomLookUp[useItem], useItem));
+// 
+// {
+//   console.log('You cant get there from here')
+// }
+//console.log(roomLookUp[useItem]);
+//enter(roomLookUp.useItem);
+//console.log(entry);
+//let useItem = input.toString
+
+
+
 
 async function start() {
 	console.log(`182 Main Street 
