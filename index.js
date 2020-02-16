@@ -36,24 +36,18 @@ const player = {
 	inventory: [ 'pocket watch', 'map' ],
 	status: [],
 	
-	// enter: (room) => {
+	enter: (room) => {
 		
-	// 	//if (roomCanGoTo['street'].includes(room)) {
+		//if (roomCanGoTo['street'].includes(room)) {
       
-  //     player.currentRoom = room.toString();
-  //      curRoom = room.toString();
-  //      console.log({player})
-  //      console.log(curRoom)
-  //     console.log(this.name + ' ' + this.description);
+      player.currentRoom = room
+       curRoom = room.toString();
+       console.log({player})
+	   console.log(curRoom)
+	   return  this.name + ' ' + this.description
       
-	// 	} else {
-	// 		console.log('I can not go to that room');
-	// 		console.log(player.currentRoom.roomCanGoTo);
-	// 		console.log(room);
-	// 		play();
-	// 	}
-	// 	return curRoom
-	// },
+		
+	},
 	read: () => {
 		return player.currentRoom.sign;
 	},
@@ -76,12 +70,11 @@ const player = {
 		}
 	},
 	open: (door) => {
-		if (curRoom.lock === true) {
-			console.log(curRoom.lockMsg);
-		} else {
+		
+		// } else {
 			console.log(curRoom.name + '\n' + curRoom.description);
 			return curRoom;
-		};
+		
 	},
 	combo: (keycombo) => {
 		if (keycombo === curRoom.lockCombo) {
@@ -130,27 +123,32 @@ let foyer = {
 	inventory: [ 'newspaper', 'shoes', 'sign' ],
 	roomCanGoTo: [ 'stairway', 'street' ],
   sign: 'Class in progress up stairs',
+  lock: false
   }
 
 let classroom = {
 	name: 'Classroom',
 	description: 'BCA Class, "Abandon all hope, ye who enter here."',
 	inventory: [ 'chairs', 'knowledge' ],
-	roomCanGoTo: [ 'stairway' ]
+	roomCanGoTo: [ 'stairway' ],
+	lock: false
+
 };
 
 let pizzaplace = {
 	name: "Mr. Mike's",
 	description: 'Pizza place next door',
 	inventory: [ 'pizza' ],
-	roomCanGoTo: [ 'street' ]
+	roomCanGoTo: [ 'street' ],
+	lock: false
 };
 
 let stairway = {
   name: 'Stiarway',
   description: 'You have entered the stairway connecting the classroom and foyer',
 	sign: 'Welcome to the classroom. To enter please enter code 12345',
-  roomCanGoTo: [ 'foyer', 'classroom' ]
+  roomCanGoTo: [ 'foyer', 'classroom' ],
+  lock: false
   
 };
 
@@ -162,6 +160,8 @@ const roomLookUp = {
   'stairway': stairway,
   'pizzaplace': pizzaplace,
   'classroom': classroom
+  
+
 };
 
 const roomCanGoTo = {
@@ -182,15 +182,7 @@ const roomCanGoTo = {
 // }
 
 
-function enter(roomObj) {
-	player.currentRoom = roomObj;
-  // console.log(roomObj.roomCanGoTo)
-	// console.log({player})
-	// console.log({roomObj})
-	entry = (roomObj.name + ' ' + roomObj.description);
-return entry;
 
-}
 
 
 async function play() {
@@ -200,7 +192,7 @@ async function play() {
 	let useAction = inputArray[0];
   let useItem = inputArray[1];
   let fromRoom = inputArray[3]
-	console.log(inputArray);
+	//console.log(inputArray);
 
 	if (actions['read'].includes(useAction)) {
 		//read an item
@@ -215,11 +207,12 @@ async function play() {
 	}
 	 else if (actions['enter'].includes(useAction)) {
   //enter a room
-  if(roomCanGoTo[fromRoom].includes(useItem)){
-    console.log(enter(roomLookUp[useItem]))
-		if (useItem !== 'code') {
-		player.open(useItem);
-		} else if (useItem === 'code') {
+  console.log({player})
+  if(roomCanGoTo[fromRoom].includes(useItem) && curRoom.lock === false) {
+    player.enter(roomLookUp[useItem])
+	
+  } else if (roomCanGoTo[fromRoom].includes(useItem) && curRoom.lock == true){
+		console.log(useItem.lockMsg)
 			let keycombo = await (ask ('Enter the secret code: '));
 			player.combo(keycombo);
 		} else {
@@ -228,9 +221,9 @@ async function play() {
 		play();
 	} else {
     console.log('You can\'t get there from here.')
-    player()
-  }} 
-	else if (actions['show'].includes(useAction)) {
+    play()
+  }
+	 if (actions['show'].includes(useAction)) {
 		player.show();
 		play();
 	} else if (actions['drop'].includes(useAction)) {
@@ -246,7 +239,7 @@ Good Bye`
 	process.exit();
 } else {
 	console.log("I don't know how to  " + inputArray[0]);
-	console.log({ player });
+
 	play();
 }
 }
