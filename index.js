@@ -35,13 +35,20 @@ const player = {
 
 	enter: (room) => {
 		//if (roomCanGoTo['street'].includes(room)) {
-
-		player.currentRoom = room;
-		curRoom = player.currentRoom;
-		// console.log({ player })
-		// console.log(curRoom)
-		console.log(curRoom.name + '\n' + curRoom.description);
+			player.currentRoom = room;
+			curRoom = player.currentRoom;
+				
+				// console.log({ player })
+				// console.log(curRoom)
+				console.log(curRoom.name + '\n' + curRoom.description);
 	},
+
+	attend: () => {
+		player.inventory.push('knowledge')
+		player.status.push('hunger')
+		classroom.inventory.pop()
+	},
+
 	read: () => {
 		return player.currentRoom.sign;
 	},
@@ -104,7 +111,8 @@ const actions = {
 	drop: [ 'drop', 'let go', 'give' ],
 	accept: [ 'yes', 'i would' ],
 	enter: [ 'enter', 'open', 'code' ],
-	show: [ 'i', 'inventory' ]
+	show: [ 'i', 'inventory' ],
+	attend: ['attend', 'participate', 'join']
 };
 
 let street = {
@@ -161,7 +169,9 @@ let pizzaplace = {
 
 let stairway = {
 	name: 'Stairway',
-	description: 'You have entered the stairway connecting the classroom and foyer',
+	description: 
+	`You have entered the stairway connecting the classroom and foyer,
+	If you want to attend class, enter the classroom from stairway and attend class`,
 	sign: 'Welcome to the classroom. Class is in session, please enter and quietly and prepare to have your mind blown',
 	roomCanGoTo: [ 'foyer', 'classroom' ],
 	lock: false
@@ -214,6 +224,10 @@ async function play() {
 	let useItem = inputArray[1];
 	let fromRoom = inputArray[3];
 	//console.log(inputArray);
+	console.log({player})
+if(player.status.includes('hunger')){
+	console.log('Hunger begins to mount')
+}
 
 	if (actions['read'].includes(useAction)) {
 		//read an item
@@ -253,7 +267,12 @@ async function play() {
 	} else if (actions['show'].includes(useAction)) {
 		player.show();
 		play();
-	} else if (actions['drop'].includes(useAction)) {
+	} else if(actions['attend'].includes(useAction)) {
+		player.attend()
+		play()
+		
+	}
+	else if (actions['drop'].includes(useAction)) {
 		player.drop(useItem);
 		play();
 	} else if (inputClean === 'exit') {
@@ -263,6 +282,7 @@ async function play() {
 Good Bye`
 		);
 		process.exit();
+		
 	} else {
 		console.log("I don't know how to  " + inputArray[0]);
 
