@@ -41,10 +41,12 @@ const player = {
 		//if (roomCanGoTo['street'].includes(room)) {
       
       player.currentRoom = room
-       curRoom = room.toString();
+       curRoom = player.currentRoom;
        console.log({player})
 	   console.log(curRoom)
-	   return  this.name + ' ' + this.description
+	   console.log(curRoom.name + '\n' + curRoom.description);
+	//    return curRoom;
+	//    return  this.name + ' ' + this.description
       
 		
 	},
@@ -165,7 +167,7 @@ const roomLookUp = {
 };
 
 const roomCanGoTo = {
-	'street': [ 'pizza place', 'foyer'],
+	'street': [ 'pizzaplace', 'foyer'],
   'foyer': [ 'stairway', 'street' ],
   'classroom': ['stairway'],
   'stairway': ['classroom', 'foyer'],
@@ -209,7 +211,7 @@ async function play() {
   //enter a room
   console.log({player})
   if(roomCanGoTo[fromRoom].includes(useItem) && curRoom.lock === false) {
-    player.enter(roomLookUp[useItem])
+    player.enter(roomLookUp[useItem]);
 	
   } else if (roomCanGoTo[fromRoom].includes(useItem) && curRoom.lock == true){
 		console.log(useItem.lockMsg)
