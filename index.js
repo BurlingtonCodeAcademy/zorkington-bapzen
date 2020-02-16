@@ -100,7 +100,7 @@ const player = {
 
 const actions = {
 	read: [ 'read', 'view' ],
-	take: [ 'take', 'grab' ],
+	take: [ 'take', 'grab', 'buy' ],
 	drop: [ 'drop', 'let go', 'give' ],
 	accept: [ 'yes', 'i would' ],
 	enter: [ 'enter', 'open', 'code' ],
