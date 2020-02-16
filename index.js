@@ -50,6 +50,9 @@ const player = {
 			player.inventory.push(item);
 			curRoom.inventory.pop();
 			console.log('You have taken the ' + item + '.');
+			if (item === 'newspaper') {
+				console.log('You pick up the paper and leaf through it \nlooking for comics and ignoring the articles, just like everybody else does.');
+			}
 			if (player.inventory.includes('pizza')) {
 					console.log(
 						`You have won the Game! 
