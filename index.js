@@ -35,13 +35,20 @@ const player = {
 
 	enter: (room) => {
 		//if (roomCanGoTo['street'].includes(room)) {
-
-		player.currentRoom = room;
-		curRoom = player.currentRoom;
-		// console.log({ player })
-		// console.log(curRoom)
-		console.log(curRoom.name + '\n' + curRoom.description);
+			player.currentRoom = room;
+			curRoom = player.currentRoom;
+				
+				// console.log({ player })
+				// console.log(curRoom)
+				console.log(curRoom.name + '\n' + curRoom.description);
 	},
+
+	attend: () => {
+		player.inventory.push('knowledge')
+		player.status.push('hunger')
+		classroom.inventory.pop()
+	},
+
 	read: () => {
 		return player.currentRoom.sign;
 	},
@@ -69,6 +76,14 @@ const player = {
 			player.inventory.pop();
 			curRoom.inventory.push(item);
 			console.log('You just dropped the ' + item);
+			if (classroom.inventory.includes('tea')){
+				console.log(
+					`Bob grabs the tea and consumes it in one giant gulp.
+					With newfound vigor he exclaims
+					"You will forever be my favorite student
+					If you are hungry try going to the street and then the pizzaplace
+					They have great slices"`)
+			}
 		} else {
 			console.log("Can't drop what you don't have.");
 		}
@@ -95,11 +110,12 @@ const player = {
 
 const actions = {
 	read: [ 'read', 'view' ],
-	take: [ 'take', 'grab' ],
-	drop: [ 'drop', 'let go' ],
+	take: [ 'take', 'grab', 'buy' ],
+	drop: [ 'drop', 'let go', 'give' ],
 	accept: [ 'yes', 'i would' ],
 	enter: [ 'enter', 'open', 'code' ],
-	show: [ 'i', 'inventory' ]
+	show: [ 'i', 'inventory' ],
+	attend: ['attend', 'participate', 'join']
 };
 
 let street = {
@@ -117,7 +133,7 @@ let street = {
 		Once you have unloced the door proceed through the foyer and up the stairs`,
 	takeSign: 'That would be selfish. How will other students find their way?',
 	inventory: [], //This inventory initialized without 'sign' so that there is none to take.
-	roomCanGoTo: [ 'foyer', 'pizza place' ]
+	roomCanGoTo: [ 'foyer', 'pizza place', 'muddys' ]
 };
 
 let foyer = {
@@ -138,7 +154,9 @@ let classroom = {
 	and in this moment you realize how hungry you are.
 	Convieniently Bob then mentions we are breaking for lunch...
 	which probably means he is ready for tea
-	Before sending you off he mentions that if you exit back into the street theres a pizzaplace with cheap slices `,
+	He adds, 
+	"If you want to be my favorite student and earn my knowledge of the best pizza around get me some tea from muddys
+	its right off the street after you leave the foyer"`,
 	inventory: [ 'chairs', 'knowledge' ],
 	roomCanGoTo: [ 'stairway' ],
 	lock: false
@@ -154,14 +172,27 @@ let pizzaplace = {
 
 let stairway = {
 	name: 'Stairway',
-	description: 'You have entered the stairway connecting the classroom and foyer',
+	description: 
+	`You have entered the stairway connecting the classroom and foyer,
+	If you want to attend class, enter the classroom from stairway and attend class`,
 	sign: 'Welcome to the classroom. Class is in session, please enter and quietly and prepare to have your mind blown',
 	roomCanGoTo: [ 'foyer', 'classroom' ],
 	lock: false
 };
+let muddys = {
+	name: 'Muddys',
+	description: 
+	`Welcome to Muddys. 
+	We sell tea, and coffee.`,
+	sign: 'Come on in for warm beverages',
+	roomCanGoTo: ['street'],
+	lock: false,
+	inventory: ['coffee', 'tea']
+}
 
 //rooms look up
 const roomLookUp = {
+	muddys: muddys,
 	street: street,
 	foyer: foyer,
 	//'muddy': muddy,
@@ -171,11 +202,12 @@ const roomLookUp = {
 };
 
 const roomCanGoTo = {
-	street: [ 'pizzaplace', 'foyer' ],
+	street: [ 'pizzaplace', 'foyer', 'muddys' ],
 	foyer: [ 'stairway', 'street' ],
 	classroom: [ 'stairway' ],
 	stairway: [ 'classroom', 'foyer' ],
-	pizzaplace: [ 'street' ]
+	pizzaplace: [ 'street' ],
+	muddys: ['street']
 };
 
 // function enterState(newState) {
@@ -195,6 +227,10 @@ async function play() {
 	let useItem = inputArray[1];
 	let fromRoom = inputArray[3];
 	//console.log(inputArray);
+	console.log({player})
+if(player.status.includes('hunger')){
+	console.log('Hunger begins to mount')
+}
 
 	if (actions['read'].includes(useAction)) {
 		//read an item
@@ -234,7 +270,12 @@ async function play() {
 	} else if (actions['show'].includes(useAction)) {
 		player.show();
 		play();
-	} else if (actions['drop'].includes(useAction)) {
+	} else if(actions['attend'].includes(useAction)) {
+		player.attend()
+		play()
+		
+	}
+	else if (actions['drop'].includes(useAction)) {
 		player.drop(useItem);
 		play();
 	} else if (inputClean === 'exit') {
@@ -244,6 +285,7 @@ async function play() {
 Good Bye`
 		);
 		process.exit();
+		
 	} else {
 		console.log("I don't know how to  " + inputArray[0]);
 
