@@ -85,14 +85,14 @@ const player = {
 		console.log(curRoom.name + '\n' + curRoom.description);
 		return curRoom;
 	},
-	combo: (keycombo) => {
-		if (keycombo === curRoom.lockCombo) {
-			curRoom.lock = false;
-			console.log(curRoom.unlockMsg);
-			curRoom = roomLookUp[curRoom.unlockRoom];
+	combo: (keycombo, newRoom) => {
+		if (keycombo === newRoom.lockCombo) {
+			newRoom.lock = false;
+			console.log(newRoom.unlockMsg);
+			curRoom = roomLookUp[newRoom.unlockRoom];
 			console.log(curRoom.name + '\n' + curRoom.description);
 		} else {
-			console.log(curRoom.tryLockMsg);
+			console.log(newRoom.tryLockMsg);
 		}
 	},
 	show: (thing) => {
@@ -116,18 +116,13 @@ let street = {
 	name: '182 Main St.',
 	description:
 		'You are standing on Main Street between Church and South Winooski. There is a door here. A keypad sits on the handle. On the door is a handwritten sign.',
-	lockMsg: 'The door is locked. There is a keypad on the door handle.',
-	tryLockMsg: 'Bzzzzt! The door is still locked.',
-	unlockMsg: '\nSuccess! The door opens. \nYou enter the foyer and the door shuts behind you...',
-	lock: true,
-	lockCombo: '12345',
-	unlockRoom: 'foyer',
 	sign:
 		`The sign says "Welcome to Burlington Code Academy! Come on up to the third floor. If the door is locked, use the code "12345".
 		Once you have unlocked the door proceed through the foyer and up the stairs`,
 	takeSign: 'That would be selfish. How will other students find their way?',
 	inventory: [], //This inventory initialized without 'sign' so that there is none to take.
-	roomCanGoTo: ['foyer', 'pizza place', 'muddys']
+	roomCanGoTo: ['foyer', 'pizza place', 'muddys'],
+	lock: false
 };
 
 let foyer = {
@@ -137,7 +132,12 @@ let foyer = {
 	inventory: ['newspaper', 'shoes', 'sign'],
 	roomCanGoTo: ['stairway', 'street'],
 	sign: 'Class in progress up stairs',
-	lock: false
+	unlockRoom: 'foyer',
+	lockMsg: 'The door is locked. There is a keypad on the door handle.',
+	tryLockMsg: 'Bzzzzt! The door is still locked.',
+	unlockMsg: '\nSuccess! The door opens. \nYou enter the foyer and the door shuts behind you...',
+	lock: true,
+	lockCombo: '12345'
 };
 
 let classroom = {
@@ -150,7 +150,8 @@ let classroom = {
 	which probably means he is ready for tea
 	He adds, 
 	"If you want to be my favorite student and earn my knowledge of the best pizza around get me some tea from muddys
-	its right off the street after you leave the foyer"`,
+	its right off the street after you leave the foyer
+	Remember to attend class if you want to gain any knowledge."`,
 	inventory: ['chairs', 'knowledge'],
 	roomCanGoTo: ['stairway'],
 	lock: false
@@ -195,6 +196,15 @@ const roomLookUp = {
 	classroom: classroom
 };
 
+const canEnterFrom = {
+	street: ['pizzaplace', 'foyer', 'muddys'],
+	foyer: ['stairway', 'street'],
+	classroom: ['stairway'],
+	stairway: ['classroom', 'foyer'],
+	pizzaplace: ['street'],
+	muddys: ['street']
+};
+
 // Lookup for path of allowed access to rooms
 const roomCanGoTo = {
 	street: ['pizzaplace', 'foyer', 'muddys'],
@@ -228,12 +238,12 @@ async function play() {
 		play();
 	} else if (actions['enter'].includes(useAction)) {
 		//enter a room
-		if (roomCanGoTo[fromRoom].includes(useItem) && curRoom.lock === false) {
+		if (roomCanGoTo[fromRoom].includes(useItem) && roomLookUp[useItem].lock === false) {
 			player.enter(roomLookUp[useItem]);
-		} else if (roomCanGoTo[fromRoom].includes(useItem) && curRoom.lock === true) {
-			console.log(curRoom.lockMsg);
+		} else if (roomCanGoTo[fromRoom].includes(useItem) && roomLookUp[useItem].lock === true) {
+			console.log(roomLookUp[useItem].lockMsg);
 			let keycombo = await ask('Enter the secret code: ');
-			player.combo(keycombo);
+			player.combo(keycombo, roomLookUp[useItem]);
 		} else {
 			console.log("You can't get there from here.");
 			play();
@@ -277,7 +287,7 @@ async function start() {
 	console.log(`Alright ${userName} welcome to your first day of class.`);
 
 	// if answer is affirmative go inside if not('gargle') repeat question
-	let input = await ask('type yes to start your day\n');
+	let input = (await ask('type yes to start your day\n')).trim();
 	if (input === 'yes') {
 		curRoom = street;
 		player.currentRoom = street;
