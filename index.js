@@ -1,3 +1,8 @@
+/** You have a good start to this program with a few bugs to work out. Taking and dropping things is a little funky and you should check out those actions.
+ *  It looks like you have completed most of the stories in a way and added a few extra rooms and actions, great job. You are almost there for functionality.
+ *  Once you work out some of the bugs mentioned in the comments then you should be right where you need to be. It looks like you have a pretty good understanding
+ *  of the topics discussed in week 2 and how to use objects, you just have a few kinks to work out. Also, you have some good comments, but a few more describing
+ *  objects, blocks of code, functions, etc would be good to improve readability. **/
 const readline = require('readline');
 const readlineInterface = readline.createInterface(process.stdin, process.stdout);
 
@@ -8,6 +13,7 @@ function ask(questionText) {
 }
 
 // State machine for room transitions
+/** This 'pathStates' and 'objects' objects are unused in your code, remember to remove unused code for better readability and organization **/
 let pathStates = {
 	street: { canMoveTo: ['foyer', 'muddy'] },
 	foyer: { canMoveTo: ['stairs', 'street'] },
@@ -30,6 +36,8 @@ const player = {
 	inventory: ['pocket watch', 'map'],
 	status: [],
 
+	/** Careful using fat arrow syntax in object literals like this. The way you have it now works fine, but if you were to use the 'this' keyword, you
+	 *  begin to get some weird behavior because of the way 'this' works with arrow functions. You can read more about arrow functions here (https://stackoverflow.com/questions/36717376/arrow-function-in-object-literal) and here (https://www.sitepoint.com/es6-arrow-functions-new-fat-concise-syntax-javascript/)**/
 	enter: (room) => {
 
 		player.currentRoom = room;
@@ -55,7 +63,7 @@ const player = {
 			}
 			if (player.inventory.includes('pizza')) {
 				console.log(
-					`You have won the Game! 
+					`You have won the Game!
 						After taking the pizza you realize it\'s what you have always needed.`
 				);
 				process.exit();
@@ -66,7 +74,7 @@ const player = {
 	},
 	drop: (item) => {
 		if (player.inventory.includes(item)) {
-			player.inventory.pop();
+			player.inventory.pop();	/** Careful here, if the item you are trying to remove is not the last item in the inventory, then you will be popping the wrong item **/
 			curRoom.inventory.push(item);
 			console.log('You just dropped the ' + item);
 			if (classroom.inventory.includes('tea')) {
@@ -112,6 +120,9 @@ const actions = {
 };
 
 // Begin objects to define rooms:
+/** This set of objects is a good example where you can define a Room class and then create new instances of room by passing in the values you have passed to
+ *  each of the objects below, but this works fine the way it is! I also like that you have sort of worked your state machine into your objects with a
+ *  roomCanGoTo property, but you aren't using it in the rest of your code! Bummer! **/
 let street = {
 	name: '182 Main St.',
 	description:
@@ -148,7 +159,7 @@ let classroom = {
 	and in this moment you realize how hungry you are.
 	Convieniently Bob then mentions we are breaking for lunch...
 	which probably means he is ready for tea
-	He adds, 
+	He adds,
 	"If you want to be my favorite student and earn my knowledge of the best pizza around get me some tea from muddys
 	its right off the street after you leave the foyer
 	Remember to attend class if you want to gain any knowledge."`,
@@ -178,7 +189,7 @@ let stairway = {
 let muddys = {
 	name: 'Muddys',
 	description:
-		`Welcome to Muddys. 
+		`Welcome to Muddys.
 	We sell tea, and coffee.`,
 	sign: 'Come on in for warm beverages',
 	roomCanGoTo: ['street'],
@@ -196,6 +207,7 @@ const roomLookUp = {
 	classroom: classroom
 };
 
+/** Looks like you have a few redundant state machine objects throughout your code **/
 const canEnterFrom = {
 	street: ['pizzaplace', 'foyer', 'muddys'],
 	foyer: ['stairway', 'street'],
@@ -206,6 +218,7 @@ const canEnterFrom = {
 };
 
 // Lookup for path of allowed access to rooms
+/** Nice use of a state machine object **/
 const roomCanGoTo = {
 	street: ['pizzaplace', 'foyer', 'muddys'],
 	foyer: ['stairway', 'street'],
@@ -218,16 +231,20 @@ const roomCanGoTo = {
 // Begin async function for game play
 async function play() {
 	let input = await ask('\n>');
-	let inputClean = input.toLowerCase();
+	let inputClean = input.toLowerCase();	/** Nice input sanitization **/
 	let inputArray = inputClean.split(' ');
+	/** These variable names are a little confusing and you are getting these from specific indices in the inputArray which calls for weird behavior if the
+	 *  user enters some action that should be allowed, but entered in an unexpected way. **/
 	let useAction = inputArray[0];
 	let useItem = inputArray[1];
-	let fromRoom = inputArray[3];
-	
+	let fromRoom = inputArray[3];	/** maybe this would be better named as toRoom? Is this the room you want to be moving to? **/
+
 	if (player.status.includes('hunger')) {
 		console.log('Hunger begins to mount')
 	}
 
+	/** For your read and take actions, maybe add an and operator (&&) to check if the input includes 'read' AND it includes another word like sign, or paper.
+	 *  Otherwise, these checks will become true no matter what you are trying to read or take and will default to trying to read and take the sign. **/
 	if (actions['read'].includes(useAction)) {
 		//read an item
 		console.log(player.read());
@@ -238,6 +255,11 @@ async function play() {
 		play();
 	} else if (actions['enter'].includes(useAction)) {
 		//enter a room
+		/** Your program is crashing here when trying to enter the foyer using command 'enter foyer' when I type: enter to the foyer, this spits back 'cannot go
+		 *  there from here. Instead of getting the room using a specific index of the inputArray, try using inputArray[inputArray.length - 1]. This will get the
+		 *  last word in the inputArray so that the input doesn't have to be so specific. Also, this check is looking in roomCanGoTo for fromRoom which will be
+		 *  'foyer' and you can't go from foyer to foyer, so it thinks it is an invalid transition. Edit: I see what you are trying to achieve here, but it is pretty
+		 *  non-intuitive. If I type 'enter foyer from street' this works, just very specific and I think I could only get this because I am looking at your code. **/
 		if (roomCanGoTo[fromRoom].includes(useItem) && roomLookUp[useItem].lock === false) {
 			player.enter(roomLookUp[useItem]);
 		} else if (roomCanGoTo[fromRoom].includes(useItem) && roomLookUp[useItem].lock === true) {
@@ -256,6 +278,7 @@ async function play() {
 		player.attend()
 		play()
 	}
+	/** Check out your drop function, and see what happens when you try to drop the pocket watch **/
 	else if (actions['drop'].includes(useAction)) {
 		player.drop(useItem);
 		play();
@@ -276,12 +299,12 @@ Good Bye`
 
 // Begin async function to start the game
 async function start() {
-	console.log(`182 Main Street 
+	console.log(`182 Main Street
   You are standing on Main Street between Church and South Winooski.
   There is a door here. A keypad sits on the handle.
   On the door is a handwritten sign.`);
 	player.name = null;
-	let userName = await ask(`Oh wait 
+	let userName = await ask(`Oh wait
   First what is your name? \n`);
 	player.name = userName;
 	console.log(`Alright ${userName} welcome to your first day of class.`);
