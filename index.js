@@ -58,7 +58,8 @@ const player = {
 
 	drop: (item) => {
 		if (player.inventory.includes(item)) {
-			player.inventory.splice(player.inventory[item], 1);
+			let itemIdx = player.inventory.findIndex(thing => thing === item);
+			player.inventory.splice(itemIdx, 1);
 			curRoom.inventory.push(item);
 			console.log('You just dropped the ' + item);
 			if (classroom.inventory.includes('tea')) {
