@@ -19,6 +19,7 @@ const player = {
 	inventory: ['pocket watch', 'map'],
 	status: [],
 
+	// method to allow for player to switch room contexts:
 	enter: (room) => {
 
 		player.currentRoom = room;
@@ -36,6 +37,7 @@ const player = {
 		return player.currentRoom.sign;
 	},
 
+	// take an item from a room inventory:
 	take: (item) => {
 		if (curRoom.inventory.includes(item)) {
 			player.inventory.push(item);
@@ -55,7 +57,7 @@ const player = {
 			console.log('\nThat would be selfish. How will other students find their way?');
 		}
 	},
-
+	// method to allow player to drop items in any room by input and leave item in the room's inventory:
 	drop: (item) => {
 		if (player.inventory.includes(item)) {
 			let itemIdx = player.inventory.findIndex(thing => thing === item);
@@ -78,6 +80,7 @@ const player = {
 		console.log(curRoom.name + '\n' + curRoom.description);
 		return curRoom;
 	},
+	// method to process combination lock key-in
 	combo: (keycombo, newRoom) => {
 		if (keycombo === newRoom.lockCombo) {
 			newRoom.lock = false;
@@ -179,7 +182,7 @@ let muddys = {
 	inventory: ['coffee', 'tea']
 };
 
-//rooms look up
+//rooms look up to convert user input to a room object:
 const roomLookUp = {
 	muddys: muddys,
 	street: street,
@@ -187,15 +190,6 @@ const roomLookUp = {
 	stairway: stairway,
 	pizzaplace: pizzaplace,
 	classroom: classroom
-};
-
-const canEnterFrom = {
-	street: ['pizzaplace', 'foyer', 'muddys'],
-	foyer: ['stairway', 'street'],
-	classroom: ['stairway'],
-	stairway: ['classroom', 'foyer'],
-	pizzaplace: ['street'],
-	muddys: ['street']
 };
 
 // Lookup for path of allowed access to rooms
@@ -209,6 +203,7 @@ const roomCanGoTo = {
 };
 
 // Begin async function for game play
+// Initialize the input variable set to sanitize and parse input:
 async function play() {
 	let input = await ask('\n>');
 	let inputClean = input.toLowerCase();
@@ -216,6 +211,8 @@ async function play() {
 	let useAction = inputArray[0];
 	let useItem = inputArray[1];
 	let fromRoom = inputArray[3];
+
+	//Begin the if...else logic which is driven by command input compared to methods in player object, primarily.
 	
 	if (player.status.includes('hunger')) {
 		console.log('Hunger begins to mount')
@@ -231,6 +228,8 @@ async function play() {
 		play();
 	} else if (actions['enter'].includes(useAction)) {
 		//enter a room
+		//Logic uses second keyword of user input to index the roomCanGoTo lookup of allowable paths.
+		// It compares the lock status of each room as well to produce the allowed path.
 		if (roomCanGoTo[fromRoom].includes(useItem) && roomLookUp[useItem].lock === false) {
 			player.enter(roomLookUp[useItem]);
 		} else if (roomCanGoTo[fromRoom].includes(useItem) && roomLookUp[useItem].lock === true) {
@@ -261,7 +260,7 @@ Good Bye`
 		process.exit();
 
 	} else {
-		console.log("I don't know how to  " + inputArray[0]);
+		console.log("I don't know how to  " + inputArray[0]);  // Catch-all for unrecognized commands
 
 		play();
 	}
