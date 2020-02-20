@@ -7,23 +7,12 @@ function ask(questionText) {
 	});
 }
 
-// State machine for room transitions
-let pathStates = {
-	street: { canMoveTo: ['foyer', 'muddy'] },
-	foyer: { canMoveTo: ['stairs', 'street'] },
-	muddy: { canMoveTo: ['street', 'pizza'] },
-	pizza: { canMoveTo: ['muddy'] }
-};
 
-const objects = {
-	sign: 'no',
-	newspaper: 'yes'
-};
-
-// global variable for holding room state:
+// Declare global variable for holding room state:
 let curRoom;
 
 
+//Declare player object for inventory, status, and action methods
 const player = {
 	name: null,
 	currentRoom: null,
@@ -36,6 +25,7 @@ const player = {
 		curRoom = player.currentRoom;
 		console.log(curRoom.name + '\n' + curRoom.description);
 	},
+
 	attend: () => {
 		player.inventory.push('knowledge')
 		player.status.push('hunger')
@@ -45,6 +35,7 @@ const player = {
 	read: () => {
 		return player.currentRoom.sign;
 	},
+
 	take: (item) => {
 		if (curRoom.inventory.includes(item)) {
 			player.inventory.push(item);
@@ -64,9 +55,10 @@ const player = {
 			console.log('\nThat would be selfish. How will other students find their way?');
 		}
 	},
+
 	drop: (item) => {
 		if (player.inventory.includes(item)) {
-			player.inventory.pop();
+			player.inventory.splice(player.inventory[item], 1);
 			curRoom.inventory.push(item);
 			console.log('You just dropped the ' + item);
 			if (classroom.inventory.includes('tea')) {
